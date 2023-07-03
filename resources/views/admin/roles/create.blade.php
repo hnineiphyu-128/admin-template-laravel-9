@@ -26,19 +26,23 @@
             </div>
             <div class="row form-group">
                 <label class="required my-3" for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
-                @foreach ($permissions as $id => $permission)
-                    @php
-                        $type_arr = explode('_', $permission);
-                        // array_pop($type_arr);
-                        $type = ucwords(join(' ', $type_arr));
-                    @endphp
-                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12 m-2">
-                        <div class="form-group my-2">
-                            <input type="checkbox" name="permissions[]" id="permission{{ $id }}" value="{{ $id }}">
-                            <label class="" for="permission{{ $id }}">{{ $type }}</label>
-                            <span class="help-block">{{ trans('cruds.role.fields.permissions_helper') }}</span>
+                @foreach ($permissions as $title => $permissions_array)
+                    @foreach ($permissions_array as $id => $permission)
+                        @php
+                            $type_arr = explode('_', $permission);
+                            // array_pop($type_arr);
+                            $type = ucwords(join(' ', $type_arr));
+                        @endphp
+                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12 my-1">
+                            <div class="form-group my-2">
+                                <input class="cursor-pointer permissions" type="checkbox" name="permissions[]" id="permission{{ $id }}" value="{{ $id }}"
+                                onclick="clickPermission({{ $id }})">
+                                <label class="cursor-pointer" for="permission{{ $id }}">{{ $type }}</label>
+                                <span class="help-block">{{ trans('cruds.role.fields.permissions_helper') }}</span>
+                            </div>
                         </div>
-                    </div>
+                    @endforeach
+                    <div class="col-12"><hr style="border: 1px solid #11111123;"></div>
                 @endforeach
             </div>
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">

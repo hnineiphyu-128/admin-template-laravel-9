@@ -32,9 +32,13 @@ class RolesController extends Controller
     {
         abort_if(Gate::denies('role_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         if (Auth::user()->is_administrator) {
-            $permissions = Permission::pluck('title', 'id');
+            $permissions = Permission::pluck('title', 'id')->groupBy(function($permission) {
+                return explode('_', $permission)[0];
+            });
         } else {
-            $permissions = Permission::whereNotIn('title', ['permission_create', 'permission_edit', 'permission_delete'])->pluck('title', 'id');
+            $permissions = Permission::whereNotIn('title', ['permission_create', 'permission_edit', 'permission_delete'])->pluck('title', 'id')->groupBy(function($permission) {
+                return explode('_', $permission)[0];
+            });
         }
 
         return view('admin.roles.create', compact('permissions'));
@@ -60,9 +64,13 @@ class RolesController extends Controller
         abort_if(Gate::denies('role_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if (Auth::user()->is_administrator) {
-            $permissions = Permission::pluck('title', 'id');
+            $permissions = Permission::pluck('title', 'id')->groupBy(function($permission) {
+                return explode('_', $permission)[0];
+            });
         } else {
-            $permissions = Permission::whereNotIn('title', ['permission_create', 'permission_edit', 'permission_delete'])->pluck('title', 'id');
+            $permissions = Permission::whereNotIn('title', ['permission_create', 'permission_edit', 'permission_delete'])->pluck('title', 'id')->groupBy(function($permission) {
+                return explode('_', $permission)[0];
+            });
         }
 
         $role->load('permissions');
