@@ -10,6 +10,8 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\App;
 use App\Models\Role;
 use App\Models\User;
+use App\Repositories\Interfaces\RoleRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,15 +20,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends Controller
 {
+    public $userRepository, $roleRepository;
+    public function __construct(UserRepositoryInterface $userRepository, RoleRepositoryInterface $roleRepository) {
+        $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
+    }
+
     public function index()
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if (Auth::user()->is_administrator) {
-            $users = User::with(['roles'])->latest()->get();
-        } else {
-            $users = User::with(['roles'])->whereRelation('roles', 'id', '<>', 1)->latest()->get();
-        }
+        $users  = $this->userRepository->all();
 
         return view('admin.users.index', compact('users'));
     }
@@ -34,20 +38,17 @@ class UsersController extends Controller
     public function create()
     {
         abort_if(Gate::denies('user_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        if (Auth::user()->is_administrator) {
-            $roles = Role::get();
-        } else {
-            $roles = Role::where('id', '<>', 1)->get();
-        }
+        $roles = $this->roleRepository->all();
 
         return view('admin.users.create', compact('roles'));
     }
 
     public function store(StoreUserRequest $request)
     {
-        // dd($request->all());
-        $user = User::create($request->all());
-        $user->roles()->sync($request->roles);
+        $user = $this->userRepository->store($request->all());
+        if(count($request->input('roles', [])) > 0) {
+            $this->userRepository->assignRole($request->input('roles'), $user);
+        }
 
         return redirect()->route('admin.users.index');
     }
@@ -56,12 +57,8 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if (Auth::user()->is_administrator) {
-            $roles = Role::get();
-        } else {
-            $roles = Role::where('id', '<>', 1)->get();
-        }
-        // dd($apps);
+        $roles = $this->roleRepository->all();
+
         $user->load('roles');
 
         return view('admin.users.edit', compact('user', 'roles'));
@@ -69,9 +66,10 @@ class UsersController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        // dd($request->all());
-        $user->update($request->all());
-        $user->roles()->sync($request->roles);
+        $this->userRepository->update($request->all(), $user);
+        if(count($request->input('roles', [])) > 0) {
+            $this->userRepository->assignRole($request->input('roles'), $user);
+        }
 
         return redirect()->route('admin.users.index');
     }
@@ -89,7 +87,7 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $user->delete();
+        $this->userRepository->softdelete($user);
 
         return back();
     }

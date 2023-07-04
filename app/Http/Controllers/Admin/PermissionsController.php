@@ -7,17 +7,22 @@ use App\Http\Requests\MassDestroyPermissionRequest;
 use App\Http\Requests\StorePermissionRequest;
 use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Permission;
+use App\Repositories\Interfaces\PermissionRepositoryInterface;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class PermissionsController extends Controller
 {
+    public $permissionRepository;
+    public function __construct(PermissionRepositoryInterface $permissionRepository) {
+        $this->permissionRepository = $permissionRepository;
+    }
     public function index()
     {
         abort_if(Gate::denies('permission_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $permissions = Permission::latest()->get();
+        $permissions = $this->permissionRepository->all();
 
         return view('admin.permissions.index', compact('permissions'));
     }
@@ -31,7 +36,7 @@ class PermissionsController extends Controller
 
     public function store(StorePermissionRequest $request)
     {
-        $permission = Permission::create($request->all());
+        $this->permissionRepository->store($request->all());
 
         return redirect()->route('admin.permissions.index');
     }
@@ -45,7 +50,7 @@ class PermissionsController extends Controller
 
     public function update(UpdatePermissionRequest $request, Permission $permission)
     {
-        $permission->update($request->all());
+        $this->permissionRepository->update($request->all(), $permission);
 
         return redirect()->route('admin.permissions.index');
     }
@@ -61,7 +66,7 @@ class PermissionsController extends Controller
     {
         abort_if(Gate::denies('permission_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $permission->delete();
+        $this->permissionRepository->softDelete($permission);
 
         return back();
     }

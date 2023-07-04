@@ -27,17 +27,17 @@
             <div class="row form-group">
                 <label class="required my-3" for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
                 @foreach ($permissions as $title => $permissions_array)
-                    @foreach ($permissions_array as $id => $permission)
+                    @foreach ($permissions_array as $key => $permission)
                         @php
-                            $type_arr = explode('_', $permission);
+                            $type_arr = explode('_', $permission->title);
                             // array_pop($type_arr);
                             $type = ucwords(join(' ', $type_arr));
                         @endphp
                         <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-12 my-1">
                             <div class="form-group my-2">
-                                <input class="cursor-pointer permissions" type="checkbox" name="permissions[]" id="permission{{ $id }}" value="{{ $id }}"
-                                onclick="clickPermission({{ $id }})">
-                                <label class="cursor-pointer" for="permission{{ $id }}">{{ $type }}</label>
+                                <input class="cursor-pointer permissions" type="checkbox" name="permissions[]" id="permission{{ $permission->id }}" value="{{ $permission->id }}"
+                                >
+                                <label class="cursor-pointer" for="permission{{ $permission->id }}">{{ $type }}</label>
                                 <span class="help-block">{{ trans('cruds.role.fields.permissions_helper') }}</span>
                             </div>
                         </div>

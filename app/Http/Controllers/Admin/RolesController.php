@@ -8,6 +8,8 @@ use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Repositories\Interfaces\PermissionRepositoryInterface;
+use App\Repositories\Interfaces\RoleRepositoryInterface;
 use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,15 +17,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RolesController extends Controller
 {
+    public $roleRepository, $permissionRepository;
+    public function __construct(RoleRepositoryInterface $roleRepository, PermissionRepositoryInterface $permissionRepository) {
+        $this->roleRepository = $roleRepository;
+        $this->permissionRepository = $permissionRepository;
+    }
+
     public function index()
     {
         abort_if(Gate::denies('role_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if (Auth::user()->is_administrator) {
-            $roles = Role::with(['permissions'])->latest()->get();
-        } else {
-            $roles = Role::with(['permissions'])->where('id', '<>', 1)->latest()->get();
-        }
+        $roles = $this->roleRepository->all();
 
         return view('admin.roles.index', compact('roles'));
     }
@@ -31,15 +35,7 @@ class RolesController extends Controller
     public function create()
     {
         abort_if(Gate::denies('role_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        if (Auth::user()->is_administrator) {
-            $permissions = Permission::pluck('title', 'id')->groupBy(function($permission) {
-                return explode('_', $permission)[0];
-            });
-        } else {
-            $permissions = Permission::whereNotIn('title', ['permission_create', 'permission_edit', 'permission_delete'])->pluck('title', 'id')->groupBy(function($permission) {
-                return explode('_', $permission)[0];
-            });
-        }
+        $permissions = $this->permissionRepository->groupBy();
 
         return view('admin.roles.create', compact('permissions'));
     }
@@ -47,14 +43,10 @@ class RolesController extends Controller
     public function store(StoreRoleRequest $request)
     {
         // dd($request->input('permissions', []));
-        $role = Role::create($request->all());
-        $permissions = [];
+        $role = $this->roleRepository->store($request->all());
         if(count($request->input('permissions', [])) > 0) {
-            foreach ($request->input('permissions') as $key => $value) {
-                array_push($permissions, $value);
-            }
+            $this->roleRepository->assignPermission($request->input('permissions'), $role);
         }
-        $role->permissions()->sync($permissions);
 
         return redirect()->route('admin.roles.index');
     }
@@ -63,15 +55,7 @@ class RolesController extends Controller
     {
         abort_if(Gate::denies('role_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if (Auth::user()->is_administrator) {
-            $permissions = Permission::pluck('title', 'id')->groupBy(function($permission) {
-                return explode('_', $permission)[0];
-            });
-        } else {
-            $permissions = Permission::whereNotIn('title', ['permission_create', 'permission_edit', 'permission_delete'])->pluck('title', 'id')->groupBy(function($permission) {
-                return explode('_', $permission)[0];
-            });
-        }
+        $permissions = $this->permissionRepository->groupBy();
 
         $role->load('permissions');
 
@@ -80,16 +64,10 @@ class RolesController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        $role->update($request->all());
-
-        $permissions = [];
+        $this->roleRepository->update($request->all(), $role);
         if(count($request->input('permissions', [])) > 0) {
-            foreach ($request->input('permissions') as $key => $value) {
-                array_push($permissions, $value);
-            }
+            $this->roleRepository->assignPermission($request->input('permissions'), $role);
         }
-        $role->permissions()->sync($permissions);
-        // $role->permissions()->sync($request->input('permissions', []));
 
         return redirect()->route('admin.roles.index');
     }
@@ -107,7 +85,7 @@ class RolesController extends Controller
     {
         abort_if(Gate::denies('role_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $role->delete();
+        $this->roleRepository->softDelete($role);
 
         return back();
     }
