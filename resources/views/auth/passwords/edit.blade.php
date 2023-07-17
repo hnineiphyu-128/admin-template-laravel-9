@@ -1,8 +1,23 @@
 @extends('layouts.admin')
 @section('content')
-
 <div class="card g-0">
     <div class="col-md-12 mb-1">
+        @if(session()->has('error'))
+            <div class="col-md-12">
+                <div class="alert alert-danger my-3 alert-dismissible fade show" role="alert">
+                    <h6 class="alert-heading fw-bold mb-1">{{ session()->get('error') }}</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        @endif
+        @if(session()->has('success'))
+            <div class="col-md-12">
+                <div class="alert alert-success my-3 alert-dismissible fade show" role="alert">
+                    <h6 class="alert-heading fw-bold mb-1">{{ session()->get('success') }}</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        @endif
         <div class="card">
             <div class="card-header">
                 <h5>{{ trans('global.my_profile') }} ( {{ auth()->user()->roles[0]->title ?? '' }} )</h5>
@@ -113,6 +128,17 @@
                             <div class="form-group my-2">
                                 <label class="required" for="title">Repeat New {{ trans('cruds.user.fields.password') }}</label>
                                 <input class="form-control" type="password" name="password_confirmation" id="password_confirmation" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <div class="form-group my-2">
+                                <label class="required" for="old_password">Old {{ trans('cruds.user.fields.password') }}</label>
+                                <input class="form-control {{ $errors->has('old_password') ? 'is-invalid' : '' }}" type="password" name="old_password" id="old_password">
+                                @if($errors->has('old_password'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('old_password') }}
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <div class="col-md-12 col-12">

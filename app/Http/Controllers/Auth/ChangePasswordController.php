@@ -10,7 +10,9 @@ use App\Models\Permission;
 use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 class ChangePasswordController extends Controller
@@ -28,9 +30,11 @@ class ChangePasswordController extends Controller
 
     public function update(UpdatePasswordRequest $request)
     {
-        auth()->user()->update($request->validated());
-
-        return redirect()->route('profile.password.edit')->with('message', __('global.change_password_success'));
+        if (Hash::check($request->old_password, Auth::user()->password)) {
+            auth()->user()->update($request->validated());
+            return redirect()->route('profile.password.edit')->with('success', __('global.change_password_success'));
+        }
+        return redirect()->route('profile.password.edit')->with('error', __('global.invalid_old_password'));
     }
 
     public function updateProfile(UpdateProfileRequest $request)
@@ -39,7 +43,7 @@ class ChangePasswordController extends Controller
 
         $user->update($request->validated());
 
-        return redirect()->route('profile.password.edit')->with('message', __('global.update_profile_success'));
+        return redirect()->route('profile.password.edit')->with('success', __('global.update_profile_success'));
     }
 
     public function destroy()

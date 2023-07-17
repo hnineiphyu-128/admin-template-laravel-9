@@ -57,6 +57,7 @@ return [
     'relatedData'                    => 'Related Data',
     'update_profile_success'         => 'Profile updated successfully',
     'change_password_success'        => 'Password changed successfully',
+    'invalid_old_password'           => 'Invalid Your Old Password',
     'delete_account_success'         => 'Account deleted successfully',
     'saved'                          => 'Saved.',
     'profile_information'            => 'Profile information',

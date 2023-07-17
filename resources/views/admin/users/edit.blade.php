@@ -56,6 +56,7 @@
                                 {{ $errors->first('password') }}
                             </div>
                         @endif
+                        <small class="help-block password-error text-danger @if($errors->has('password')) d-none @endif" style="font-size: 85%;"></small>
                         <span class="help-block">{{ trans('cruds.user.fields.password_helper') }}</span>
                     </div>
                 </div>
@@ -100,51 +101,16 @@
 @section('scripts')
 @parent
 <script>
-    function toggleParent() {
-        if($('#app_id').val()) {
-            $('#parent_id').attr('disabled', false);
+    $('#password').on('keyup', function () {
+        console.log($(this).val().length);
+        if ($(this).val().length < 6) {
+            $('.password-error').html('The password must be minimum 6 length!');
         } else {
-            $('#parent_id').attr('disabled', true);
+            $('.password-error').html('');
         }
-    }
-    function filterParent(role_id) {
-        if (role_id == 1 || role_id == 2) {
-            $('#app_id').attr('disabled', true);
-            reset();
-        } else {
-            $('#app_id').attr('disabled', false);
+        if($(this).val() == ''){
+            $('.password-error').html('');
         }
-        var app_id = $('#app_id').val() ?? null;
-        $.ajax({
-            type: "get",
-            url: "/admin/users/getparentusersbyroleid?role_id=" + role_id + "&app_id=" + app_id,
-            success: function(res) {
-                var parents = res;
-                if (parents) {
-                    var text = '';
-                    var i = 1;
-                    $('#parent_id option').remove();
-                    let html = `<option value=""> {{ trans('global.pleaseSelect') }} </option>`;
-                    parents.forEach((item,i)=>{
-
-                        html += `
-                                    <option value="${item.id}"> ${item.name} </option>
-                                `;
-                    })
-                    $('#parent_id').append(html);
-                } else {
-                    $('#app_id').attr('disabled', true);
-                    reset();
-                }
-            }
-        });
-
-        function reset(){
-            $('#parent_id').attr('disabled', true);
-            $('#parent_id').val('');
-            $('#parent_id').html(`<option value=""> {{ trans('global.pleaseSelect') }} </option>`);
-            $('#app_id').val('');
-        }
-    }
+    })
 </script>
 @endsection

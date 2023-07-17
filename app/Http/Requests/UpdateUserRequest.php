@@ -16,7 +16,10 @@ class UpdateUserRequest extends FormRequest
 
     public function rules()
     {
-        return [
+        if (request()->input('password')) {
+            $rules['password'] = ['required', 'min:6'];
+        }
+        $rules =  [
             'name' => [
                 'string',
                 'required',
@@ -33,5 +36,7 @@ class UpdateUserRequest extends FormRequest
                 'array',
             ],
         ];
+
+        return $rules;
     }
 }
