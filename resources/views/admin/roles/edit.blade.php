@@ -25,8 +25,16 @@
                 </div>
             </div>
 
-            <div class="row form-group">
-                <label class="required my-3" for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
+            <div class="row form-group my-4">
+                <div class="d-flex justify-content-start">
+                    <label class="required my-3 me-3" for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
+                    <div class="form-group my-2">
+                        <div class="form-group my-2">
+                            <input class="select_all" type="checkbox" name="select_all" id="select_all">
+                            <label class="" for="select_all">{{ trans('global.select_all') }}</label>
+                        </div>
+                    </div>
+                </div>
                 @foreach ($permissions as $title => $permissions_array)
                     @foreach ($permissions_array as $key => $permission)
                         @php
@@ -79,5 +87,30 @@
 
 
 
+@endsection
+@section('scripts')
+<script>
+    const checkAllCheckbox = $('.select_all');
+    const otherCheckboxes = $('.permissions');
+    let checkboxStates=[];
+    otherCheckboxes.each(function(){
+        checkboxStates.push(this.checked);
+    });
+
+    checkAllCheckbox.prop('checked', checkboxStates.every(Boolean));
+
+    checkAllCheckbox.on('click',function(){
+        otherCheckboxes.prop('checked',this.checked);
+        checkboxStates=otherCheckboxes.map(function(){
+            return this.checked;
+        }).get();
+    });
+    otherCheckboxes.on('click', function () {
+        checkboxStates = otherCheckboxes.map(function () {
+            return this.checked;
+        }).get();
+        checkAllCheckbox.prop('checked', checkboxStates.every(Boolean));
+    });
+</script>
 @endsection
 
