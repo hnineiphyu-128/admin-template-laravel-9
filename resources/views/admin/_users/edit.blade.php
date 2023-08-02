@@ -35,7 +35,7 @@
                         <span class="help-block">{{ trans('cruds.user.fields.phone_helper') }}</span>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                {{-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="form-group my-2">
                         <label class="required" for="email">{{ trans('cruds.user.fields.email') }}</label>
                         <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required>
@@ -46,7 +46,7 @@
                         @endif
                         <span class="help-block">{{ trans('cruds.user.fields.email_helper') }}</span>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="form-group my-2">
                         <label class="required" for="password">{{ trans('cruds.user.fields.password') }}</label>
@@ -102,15 +102,15 @@
 @parent
 <script>
     $('#password').on('keyup', function () {
-            console.log($(this).val().length);
-            if ($(this).val().length < 6) {
-                $('.password-error').html('The password must be minimum 6 length!');
-            } else {
-                $('.password-error').html('');
-            }
-            if($(this).val() == ''){
-                $('.password-error').html('');
-            }
-     })
+        console.log($(this).val().length);
+        if ($(this).val().length < 6) {
+            $('.password-error').html('The password must be minimum 6 length!');
+        } else {
+            $('.password-error').html('');
+        }
+        if($(this).val() == ''){
+            $('.password-error').html('');
+        }
+    })
 </script>
 @endsection

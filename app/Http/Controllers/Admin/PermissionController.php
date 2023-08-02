@@ -12,7 +12,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PermissionsController extends Controller
+class PermissionController extends Controller
 {
     public $permissionRepository;
     public function __construct(PermissionRepositoryInterface $permissionRepository) {

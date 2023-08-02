@@ -26,9 +26,6 @@
                             {{ trans('cruds.user.fields.name') }}
                         </th>
                         <th>
-                            {{ trans('cruds.user.fields.email') }}
-                        </th>
-                        <th>
                             {{ trans('cruds.user.fields.phone') }}
                         </th>
                         <th>
@@ -47,9 +44,6 @@
                             </td>
                             <td>
                                 {{ $user->name ?? '' }}
-                            </td>
-                            <td>
-                                {{ $user->email ?? '' }}
                             </td>
                             <td>
                                 {{ $user->phone ?? '' }}
@@ -150,7 +144,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-
+  
 })
 
 </script>

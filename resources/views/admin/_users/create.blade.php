@@ -3,18 +3,17 @@
 
 <div class="card">
     <div class="card-header">
-        {{ trans('global.edit') }} {{ trans('cruds.user.title_singular') }}
+        {{ trans('global.create') }} {{ trans('cruds.user.title_singular') }}
     </div>
 
     <div class="card-body">
-        <form method="POST" action="{{ route("admin.users.update", [$user->id]) }}" enctype="multipart/form-data">
-            @method('PUT')
+        <form method="POST" action="{{ route("admin.users.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="form-group my-2">
                         <label class="required" for="name">{{ trans('cruds.user.fields.name') }}</label>
-                        <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required>
+                        <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="name" id="name" value="{{ old('name', '') }}" required>
                         @if($errors->has('name'))
                             <div class="invalid-feedback">
                                 {{ $errors->first('name') }}
@@ -26,7 +25,7 @@
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="form-group my-2">
                         <label for="phone">{{ trans('cruds.user.fields.phone') }}</label>
-                        <input class="form-control {{ $errors->has('phone') ? 'is-invalid' : '' }}" type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}">
+                        <input class="form-control {{ $errors->has('phone') ? 'is-invalid' : '' }}" type="text" name="phone" id="phone" value="{{ old('phone', '') }}">
                         @if($errors->has('phone'))
                             <div class="invalid-feedback">
                                 {{ $errors->first('phone') }}
@@ -35,10 +34,10 @@
                         <span class="help-block">{{ trans('cruds.user.fields.phone_helper') }}</span>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                {{-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="form-group my-2">
                         <label class="required" for="email">{{ trans('cruds.user.fields.email') }}</label>
-                        <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required>
+                        <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email') }}" required>
                         @if($errors->has('email'))
                             <div class="invalid-feedback">
                                 {{ $errors->first('email') }}
@@ -46,11 +45,11 @@
                         @endif
                         <span class="help-block">{{ trans('cruds.user.fields.email_helper') }}</span>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="form-group my-2">
                         <label class="required" for="password">{{ trans('cruds.user.fields.password') }}</label>
-                        <input class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" type="password" name="password" id="password">
+                        <input class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" type="password" name="password" id="password" required>
                         @if($errors->has('password'))
                             <div class="invalid-feedback">
                                 {{ $errors->first('password') }}
@@ -68,11 +67,7 @@
                             @foreach ($roles as $role)
                                 <div class="col-md-4 col-6 mb-2">
                                     <div class="form-check">
-                                        <input type="checkbox" name="roles[]" id="{{ $role->title }}"  value="{{ $role->id }}"class="form-check-input"
-                                        @if (\App\Helpers\helper::hasRole($role->id, $user->roles))
-                                            checked
-                                        @endif
-                                        onclick="filterParent({{ $role->id }})">
+                                        <input type="checkbox" name="roles[]" id="{{ $role->title }}"  value="{{ $role->id }}"class="form-check-input" onclick="filterParent({{ $role->id }})">
                                         <label for="{{ $role->title }}" class="form-check-label"><span style="font-size: 0.9rem; font-weight:bold">{{ $role->title }}</span>
                                         </label>
                                     </div>

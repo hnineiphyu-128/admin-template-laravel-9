@@ -7,23 +7,27 @@ use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
 
-class UpdateUserRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('user_edit');
+        return Gate::allows('user_create');
     }
 
     public function rules()
     {
-        $rules = [
+        return [
             'name' => [
                 'string',
                 'required',
             ],
-            'email' => [
+            'phone' => [
                 'required',
-                'unique:users,email,NULL,id,deleted_at,' . request()->route('user')->id,
+                'unique:users,phone,NULL,id,deleted_at,NULL',
+            ],
+            'password' => [
+                'required',
+                'min:6'
             ],
             'roles.*' => [
                 'integer',
@@ -33,9 +37,5 @@ class UpdateUserRequest extends FormRequest
                 'array',
             ],
         ];
-        if (!empty($this->request->get('password'))) {
-            $rules['password'] = ['required', 'min:6'];
-        }
-        return $rules;
     }
 }

@@ -12,21 +12,22 @@ Route::get('/home', function () {
 });
 
 Auth::routes(['register' => false]);
+Route::get('forget-password', 'Admin\ForgotPasswordController@showForgetPasswordForm')->name('forget.password');
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
     Route::get('/', 'HomeController@index')->name('home');
     // Permissions
-    Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
-    Route::resource('permissions', 'PermissionsController');
+    Route::delete('permissions/destroy', 'PermissionController@massDestroy')->name('permissions.massDestroy');
+    Route::resource('permissions', 'PermissionController');
 
     // Roles
-    Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
-    Route::resource('roles', 'RolesController');
+    Route::delete('roles/destroy', 'RoleController@massDestroy')->name('roles.massDestroy');
+    Route::resource('roles', 'RoleController');
 
     // Users
-    Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
-    Route::get('users/getparentusersbyroleid', 'UsersController@getparentusersbyroleid')->name('users.getparentusersbyroleid');
-    Route::resource('users', 'UsersController');
+    Route::delete('users/destroy', 'UserController@massDestroy')->name('users.massDestroy');
+    Route::get('users/getparentusersbyroleid', 'UserController@getparentusersbyroleid')->name('users.getparentusersbyroleid');
+    Route::resource('users', 'UserController');
 
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

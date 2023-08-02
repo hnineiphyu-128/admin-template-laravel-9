@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class RolesController extends Controller
+class RoleController extends Controller
 {
     public $roleRepository, $permissionRepository;
     public function __construct(RoleRepositoryInterface $roleRepository, PermissionRepositoryInterface $permissionRepository) {

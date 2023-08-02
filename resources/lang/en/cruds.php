@@ -53,7 +53,7 @@ return [
             'email_verified_at_helper' => ' ',
             'password'                 => 'Password',
             'password_helper'          => ' ',
-            'phone'                    => 'Email / Phone',
+            'phone'                    => 'Phone',
             'phone_helper'             => ' ',
             'ref_code'                 => 'Referal Code',
             'ref_code_helper'          => ' ',

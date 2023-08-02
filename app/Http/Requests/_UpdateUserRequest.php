@@ -16,14 +16,14 @@ class UpdateUserRequest extends FormRequest
 
     public function rules()
     {
-        $rules = [
+        $rules =  [
             'name' => [
                 'string',
                 'required',
             ],
-            'email' => [
+            'phone' => [
                 'required',
-                'unique:users,email,NULL,id,deleted_at,' . request()->route('user')->id,
+                'unique:users,phone,NULL,id,deleted_at,' . request()->route('user')->id,
             ],
             'roles.*' => [
                 'integer',

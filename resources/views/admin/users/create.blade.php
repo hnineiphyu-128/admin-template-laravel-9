@@ -24,6 +24,18 @@
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="form-group my-2">
+                        <label class="required" for="email">{{ trans('cruds.user.fields.email') }}</label>
+                        <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email') }}" required>
+                        @if($errors->has('email'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('email') }}
+                            </div>
+                        @endif
+                        <span class="help-block">{{ trans('cruds.user.fields.email_helper') }}</span>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                    <div class="form-group my-2">
                         <label for="phone">{{ trans('cruds.user.fields.phone') }}</label>
                         <input class="form-control {{ $errors->has('phone') ? 'is-invalid' : '' }}" type="text" name="phone" id="phone" value="{{ old('phone', '') }}">
                         @if($errors->has('phone'))
@@ -34,18 +46,6 @@
                         <span class="help-block">{{ trans('cruds.user.fields.phone_helper') }}</span>
                     </div>
                 </div>
-                {{-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                    <div class="form-group my-2">
-                        <label class="required" for="email">{{ trans('cruds.user.fields.email') }}</label>
-                        <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email') }}" required>
-                        @if($errors->has('email'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('email') }}
-                            </div>
-                        @endif
-                        <span class="help-block">{{ trans('cruds.user.fields.email_helper') }}</span>
-                    </div>
-                </div> --}}
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="form-group my-2">
                         <label class="required" for="password">{{ trans('cruds.user.fields.password') }}</label>

@@ -69,7 +69,7 @@
                 <form method="POST" action="{{ route("profile.password.updateProfile") }}">
                     @csrf
                     <div class="row">
-                        <div class="col-md-6 col-12">
+                        <div class="col-md-4 col-12">
                             <div class="form-group my-2">
                                 <label class="required" for="name">{{ trans('cruds.user.fields.name') }}</label>
                                 <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="name" id="name" value="{{ old('name', auth()->user()->name) }}" required>
@@ -80,7 +80,18 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-md-6 col-12">
+                        <div class="col-md-4 col-12">
+                            <div class="form-group my-2">
+                                <label class="required" for="title">{{ trans('cruds.user.fields.email') }}</label>
+                                <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="text" name="email" id="email" value="{{ old('email', auth()->user()->email) }}" required>
+                                @if($errors->has('email'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('email') }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
                             <div class="form-group my-2">
                                 <label class="required" for="title">{{ trans('cruds.user.fields.phone') }}</label>
                                 <input class="form-control {{ $errors->has('phone') ? 'is-invalid' : '' }}" type="text" name="phone" id="phone" value="{{ old('phone', auth()->user()->phone) }}" required>
