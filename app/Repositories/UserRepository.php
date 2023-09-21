@@ -4,8 +4,11 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Exception;
+use File;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -25,12 +28,48 @@ class UserRepository implements UserRepositoryInterface
 
     public function store($data)
     {
-        return User::create($data);
+        try {
+            DB::beginTransaction();
+            /** @var User $user */
+            $user = User::create($data);
+            if(!empty($data['profile_image']))
+            {
+                $imagePath = User::moveImage($data['profile_image'], User::IMAGE_PATH, 'profile_image', 'users');
+                $user->profile_image = $imagePath;
+                $user->save();
+            } else {
+                $user->profile_image = '/user-avatar.png';
+                $user->save();
+            }
+            File::deleteDirectory(public_path('uploads/temp/users/'. Auth::id()));
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(new \Illuminate\Support\MessageBag(['catch_exception'=>$e->getMessage()]));
+        }
+
+        return $user;
     }
 
     public function update($data, $user)
     {
-        return $user->update($data);
+        try {
+            DB::beginTransaction();
+            $user->update($data);
+            if(!empty($data['profile_image']))
+            {
+                $imagePath = User::moveImage($data['profile_image'], User::IMAGE_PATH, 'profile_image', 'users');
+                $user->profile_image = $imagePath;
+                $user->save();
+            }
+            File::deleteDirectory(public_path('uploads/temp/users/'. Auth::id()));
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(new \Illuminate\Support\MessageBag(['catch_exception'=>$e->getMessage()]));
+        }
+
+        return $user;
     }
 
     public function softDelete($user)

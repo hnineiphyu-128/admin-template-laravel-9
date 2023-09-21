@@ -50,6 +50,7 @@
     <!-- Page CSS -->
     <link rel="stylesheet" href="{{ asset('template/html/assets/vendor/css/pages/cards-statistics.css') }}" />
     <link rel="stylesheet" href="{{ asset('template/html/assets/vendor/css/pages/cards-analytics.css') }}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/5.0.7/sweetalert2.min.css" rel="stylesheet">
     @yield('styles')
     <!-- Helpers -->
     <script src="{{ asset('template/html/assets/vendor/js/helpers.js') }}"></script>
@@ -61,11 +62,11 @@
     <script src="{{ asset('template/html/assets/js/config.js') }}"></script>
   </head>
 
-  <body>    
+  <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
-        
+
         @include('partials.menu')
         <!-- Layout container -->
         <div class="layout-page">
@@ -420,7 +421,7 @@
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                      <img src="{{ asset('template/html/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                      <img src="{{ auth()->user()->profile_image }}" alt class="w-px-40 h-auto rounded-circle" />
                     </div>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
@@ -429,7 +430,7 @@
                         <div class="d-flex">
                           <div class="flex-shrink-0 me-3">
                             <div class="avatar avatar-online">
-                              <img src="{{ asset('template/html/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                              <img src="{{ auth()->user()->profile_image }}" alt class="w-px-40 h-auto rounded-circle" />
                             </div>
                           </div>
                           <div class="flex-grow-1">
@@ -590,13 +591,7 @@
     <!-- Vendors JS -->
     <script src="{{ asset('template/html/assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
     <script src="{{ asset('template/html/assets/vendor/libs/swiper/swiper.js') }}"></script>
-    <script src="{{ asset('frestui/assets/vendor/libs/datatables/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('template/html/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
-    <script src="{{ asset('frestui/assets/vendor/libs/datatables-responsive/datatables.responsive.js') }}"></script>
-    <script src="{{ asset('frestui/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') }}"></script>
-    <script src="{{ asset('frestui/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.js') }}"></script>
-    <script src="{{ asset('frestui/assets/vendor/libs/datatables-buttons/datatables-buttons.js') }}"></script>
-    <script src="{{ asset('frestui/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') }}"></script>
 
     <!-- Main JS -->
     <script src="{{ asset('template/html/assets/js/main.js') }}"></script>
@@ -604,7 +599,8 @@
     <!-- Page JS -->
     <script src="{{ asset('template/html/assets/js/dashboards-analytics.js') }}"></script>
     <script src="{{ asset('template/html/assets/js/tables-datatables-advanced.js') }}"></script>
-    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     @yield('scripts')
   </body>
 </html>

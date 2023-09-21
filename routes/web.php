@@ -27,6 +27,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Users
     Route::delete('users/destroy', 'UserController@massDestroy')->name('users.massDestroy');
     Route::get('users/getparentusersbyroleid', 'UserController@getparentusersbyroleid')->name('users.getparentusersbyroleid');
+    Route::post('users/storeMedia', 'UserController@storeMedia')->name('users.storeMedia');
+    Route::post('users/removeMedia', 'UserController@removeMedia')->name('users.removeMedia');
     Route::resource('users', 'UserController');
 
 });
@@ -36,6 +38,7 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
         Route::get('password', 'ChangePasswordController@edit')->name('password.edit');
         Route::post('password', 'ChangePasswordController@update')->name('password.update');
         Route::post('profile', 'ChangePasswordController@updateProfile')->name('password.updateProfile');
+        Route::post('profile_image', 'ChangePasswordController@updateProfileImage')->name('password.updateProfileImage');
         Route::post('profile/destroy', 'ChangePasswordController@destroy')->name('password.destroyProfile');
     }
 });

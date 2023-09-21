@@ -46,6 +46,16 @@ class ChangePasswordController extends Controller
         return redirect()->route('profile.password.edit')->with('success', __('global.update_profile_success'));
     }
 
+    public function updateProfileImage(Request $request)
+    {
+        $user = auth()->user();
+        $imagePath = User::moveImage($request['profile_image'], User::IMAGE_PATH, 'profile_image', 'users');
+        $user->profile_image = $imagePath;
+        $user->save();
+
+        return redirect()->route('profile.password.edit')->with('success', __('global.update_profile_success'));
+    }
+
     public function destroy()
     {
         $user = auth()->user();
@@ -56,6 +66,6 @@ class ChangePasswordController extends Controller
 
         $user->delete();
 
-        return redirect()->route('login')->with('message', __('global.delete_account_success'));
+        return redirect()->route('login')->with('success', __('global.delete_account_success'));
     }
 }

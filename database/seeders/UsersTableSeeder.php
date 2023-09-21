@@ -16,6 +16,7 @@ class UsersTableSeeder extends Seeder
                 'email'          => 'administrator@gmail.com',
                 'phone'          => '09797809783',
                 'password'       => bcrypt('administrator@123'),
+                'profile_image'  => '/user-avatar.png',
                 'remember_token' => null,
             ],
             [
@@ -24,6 +25,7 @@ class UsersTableSeeder extends Seeder
                 'email'          => 'admin@gmail.com',
                 'phone'          => '09406405232',
                 'password'       => bcrypt('password'),
+                'profile_image'  => '/user-avatar.png',
                 'remember_token' => null,
             ],
             [
@@ -32,6 +34,7 @@ class UsersTableSeeder extends Seeder
                 'email'          => 'manager@gmail.com',
                 'phone'          => '09406405233',
                 'password'       => bcrypt('password'),
+                'profile_image'  => '/user-avatar.png',
                 'remember_token' => null,
             ],
             [
@@ -40,6 +43,7 @@ class UsersTableSeeder extends Seeder
                 'email'          => 'staff@gmail.com',
                 'phone'          => '09406405234',
                 'password'       => bcrypt('password'),
+                'profile_image'  => '/user-avatar.png',
                 'remember_token' => null,
             ],
             [
@@ -48,6 +52,7 @@ class UsersTableSeeder extends Seeder
                 'email'          => 'user@gmail.com',
                 'phone'          => '09406405235',
                 'password'       => bcrypt('password'),
+                'profile_image'  => '/user-avatar.png',
                 'remember_token' => null,
             ],
         ];

@@ -53,6 +53,8 @@ return [
             'email_verified_at_helper' => ' ',
             'password'                 => 'Password',
             'password_helper'          => ' ',
+            'profile_image'            => 'Profile Image',
+            'profile_image_helper'     => ' ',
             'phone'                    => 'Phone',
             'phone_helper'             => ' ',
             'ref_code'                 => 'Referal Code',

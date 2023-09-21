@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ImageTrait;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Hash;
@@ -16,7 +17,9 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use SoftDeletes, Notifiable, HasFactory, HasApiTokens;
+    use SoftDeletes, Notifiable, HasFactory, HasApiTokens, ImageTrait;
+
+    const IMAGE_PATH = 'uploads/users/';
 
     public $table = 'users';
 
@@ -37,6 +40,7 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'profile_image',
         'email_verified_at',
         'remember_token',
         'created_at',
