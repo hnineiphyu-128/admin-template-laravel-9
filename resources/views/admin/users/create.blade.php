@@ -155,25 +155,25 @@
         })
         // profile image image
         profileImageDocumentMap = [];
-        var profileImageDropzone = new Dropzone("#profileImageDropzone", {
+        var featureImageDropzone = new Dropzone("#profileImageDropzone", {
             url: '{{ route('admin.users.storeMedia') }}',
             maxFilesize: 2, // MB
             addRemoveLinks: true,
             maxFiles: 1,
             headers: {
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
-            success: function(file, response) {
+            success: function (file, response) {
                 $('form').append('<input type="hidden" name="profile_image" value="' + response.name + '">')
                 profileImageDocumentMap[file.name] = response.name
             },
-            removedfile: function(file) {
+            removedfile: function (file) {
                 swal({
                     title: "Are you sure you want to remove this image?",
                     text: "If you remove this, it will be delete from data.",
                     icon: "warning",
                     type: "warning",
-                    buttons: ["Cancel", "Remove!"],
+                    buttons: ["Cancel","Remove!"],
                     confirmButtonColor: '#FF0000',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
@@ -187,11 +187,11 @@
                             name = profileImageDocumentMap[file.name]
                         }
                         $('form').find('input[name="profile_image"][value="' + name + '"]').remove()
-                        removeMedia(file.name, 'profile_image')
                     }
                 });
             },
-            init: function() {}
+            init: function () {
+            }
 
         });
 

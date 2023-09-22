@@ -179,21 +179,34 @@
             url: '{{ route('admin.users.storeMedia') }}',
             maxFilesize: 2, // MB
             addRemoveLinks: true,
-            maxFiles: 1,
             headers: {
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
-            success: function(file, response) {
+            success: function (file, response) {
+                $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
+                for (let i = 0; i < profileImageDropzone.files.length; i++) {
+                    const file = profileImageDropzone.files[i];
+                    if (i >= 1) {
+                        file.previewElement.classList.add('dz-error');
+                    }
+                }
                 $('form').append('<input type="hidden" name="profile_image" value="' + response.name + '">')
                 profileImageDocumentMap[file.name] = response.name
             },
-            removedfile: function(file) {
+            removedfile: function (file) {
+                $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
+                for (let i = 0; i < profileImageDropzone.files.length; i++) {
+                    const file = profileImageDropzone.files[i];
+                    if (i >= 5) {
+                        file.previewElement.classList.add('dz-error');
+                    }
+                }
                 swal({
                     title: "Are you sure you want to remove this image?",
                     text: "If you remove this, it will be delete from data.",
                     icon: "warning",
                     type: "warning",
-                    buttons: ["Cancel", "Remove!"],
+                    buttons: ["Cancel","Remove!"],
                     confirmButtonColor: '#FF0000',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
@@ -211,7 +224,8 @@
                     }
                 });
             },
-            init: function() {}
+            init: function () {
+            }
 
         });
         // Loop through imagePaths and add images to Dropzone
@@ -226,6 +240,7 @@
             profileImageDropzone.emit("addedfile", mockFile);
             profileImageDropzone.emit("thumbnail", mockFile, imagePath);
             profileImageDropzone.emit("complete", mockFile);
+            profileImageDropzone.files.push(mockFile);
         }
 
         function removeMedia(file_name, type) {
