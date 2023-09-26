@@ -243,22 +243,22 @@
             profileImageDropzone.files.push(mockFile);
         }
 
+
         function removeMedia(file_name, type) {
             $.ajax({
                 type: 'POST',
-                url: '{{ route('admin.users.removeMedia') }}',
-                data: {
-                    'file_name': file_name,
-                    'type': type,
-                    'model_id': {!! $user->id !!}
-                },
+                url: '{{ route('admin.products.removeMedia') }}',
+                data: {'file_name' : file_name, 'type' : type, 'product_id': {!! $product->id !!} },
                 headers: {
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },
-                success: function(data) {
-                    console.log(data);
+                success: function (data) {
+                    var allPreviews = document.querySelectorAll(".dz-preview");
+                    allPreviews.forEach(function(previewElement) {
+                        previewElement.classList.remove("dz-error");
+                    });
                 },
-                error: function(data) {
+                error: function (data) {
                     console.log(data);
                 }
             });

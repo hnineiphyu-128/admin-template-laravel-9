@@ -61,17 +61,14 @@ class UserRepository implements UserRepositoryInterface
                 unset($data['profile_image']);
             }
             $user->update($data);
-            if(!empty($profile_image))
+            if(!empty($profile_image) && is_null($user->profile_image))
             {
-                if(!$user->profile_image)
-                {
-                    $imagePath = User::moveImage($profile_image, User::IMAGE_PATH, 'profile_image', 'users');
-                    if (File::exists($user->profile_image)) {
-                        File::delete($user->profile_image);
-                    }
-                    $user->profile_image = $imagePath;
-                    $user->save();
+                $imagePath = User::moveImage($profile_image, User::IMAGE_PATH, 'profile_image', 'users');
+                if (File::exists($user->profile_image)) {
+                    File::delete($user->profile_image);
                 }
+                $user->profile_image = $imagePath;
+                $user->save();
             }
             File::deleteDirectory(public_path('uploads/temp/users/'. Auth::id()));
             DB::commit();
