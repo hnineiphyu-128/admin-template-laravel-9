@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="{{ asset('template/html/assets/css/demo.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}" />
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{ asset('template/html/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
@@ -63,15 +64,28 @@
   </head>
 
   <body>
+    {{-- preloader --}}
+    <div class="loader loader2">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
     <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-wrapper layout-content-navbar d-none">
       <div class="layout-container">
-
         @include('partials.menu')
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
-
           <nav
             class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
             id="layout-navbar">
@@ -595,6 +609,7 @@
 
     <!-- Main JS -->
     <script src="{{ asset('template/html/assets/js/main.js') }}"></script>
+    <script src="{{ asset('js/loader.js') }}"></script>
 
     <!-- Page JS -->
     <script src="{{ asset('template/html/assets/js/dashboards-analytics.js') }}"></script>
