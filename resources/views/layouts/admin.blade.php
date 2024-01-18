@@ -65,22 +65,9 @@
 
   <body>
     {{-- preloader --}}
-    <div class="loader loader2">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+    {{-- @include('admin.common.loader') --}}
     <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar d-none">
+    <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         @include('partials.menu')
         <!-- Layout container -->

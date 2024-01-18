@@ -98,17 +98,6 @@
                                     @endif
                                 </div>
                             </div>
-                            {{-- <div class="col-md-12 col-12">
-                                <div class="form-group my-2">
-                                    <label class="" for="address">{{ trans('cruds.user.fields.address') }}</label>
-                                        <textarea class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}" name="address" id="address" cols="30" rows="2">{{ old('address', auth()->user()->address) }}</textarea>
-                                    @if ($errors->has('address'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('address') }}
-                                        </div>
-                                    @endif
-                                </div>
-                            </div> --}}
                             <div class="col-md-12 col-12">
                                 <div class="form-group my-2">
                                     <button class="btn btn-success" type="submit">
@@ -241,15 +230,32 @@
         url: '{{ route('admin.users.storeMedia') }}',
         maxFilesize: 2, // MB
         addRemoveLinks: true,
-        maxFiles: 1,
         headers: {
         'X-CSRF-TOKEN': "{{ csrf_token() }}"
         },
         success: function (file, response) {
+            $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
+            for (let i = 0; i < profileImageDropzone.files.length; i++) {
+                const file = profileImageDropzone.files[i];
+                if (i >= 1) {
+                    file.previewElement.classList.add('dz-error');
+                }
+            }
             $('form').append('<input type="hidden" name="profile_image" value="' + response.name + '">')
             profileImageDocumentMap[file.name] = response.name
         },
         removedfile: function (file) {
+            var allPreviews = document.querySelectorAll(".dz-preview");
+            allPreviews.forEach(function(previewElement) {
+                previewElement.classList.remove("dz-error");
+            });
+            $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
+            for (let i = 0; i < profileImageDropzone.files.length; i++) {
+                const file = profileImageDropzone.files[i];
+                if (i >= 1) {
+                    file.previewElement.classList.add('dz-error');
+                }
+            }
             swal({
                 title: "Are you sure you want to remove this image?",
                 text: "If you remove this, it will be delete from data.",
@@ -282,9 +288,10 @@
     if (imagePath) {
         var imageName = {!! json_encode(\App\Models\User::getImageName(auth()->user()->profile_image)) !!};
         var mockFile = { name: imageName, size: 5, accepted: true };
-        profileImageDropzone.emit("addedfile", mockFile);
-        profileImageDropzone.emit("thumbnail", mockFile, imagePath);
-        profileImageDropzone.emit("complete", mockFile);
+            profileImageDropzone.emit("addedfile", mockFile);
+            profileImageDropzone.emit("thumbnail", mockFile, imagePath);
+            profileImageDropzone.emit("complete", mockFile);
+            profileImageDropzone.files.push(mockFile);
     }
 
     function removeMedia(file_name, type) {

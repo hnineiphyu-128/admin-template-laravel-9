@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Permission;
 use App\Models\User;
 use Gate;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,10 +50,20 @@ class ChangePasswordController extends Controller
     public function updateProfileImage(Request $request)
     {
         $user = auth()->user();
-        $imagePath = User::moveImage($request['profile_image'], User::IMAGE_PATH, 'profile_image', 'users');
-        $user->profile_image = $imagePath;
-        $user->save();
-
+        try {
+            DB::beginTransaction();
+            if(!empty($request['profile_image']) && is_null($user->profile_image))
+            {
+                $imagePath = User::moveImage($request['profile_image'], User::IMAGE_PATH, 'profile_image', 'users');
+                $user->profile_image = $imagePath;
+                $user->save();
+            }
+            File::deleteDirectory(public_path('uploads/temp/users/'. Auth::id()));
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(new \Illuminate\Support\MessageBag(['catch_exception'=>$e->getMessage()]));
+        }
         return redirect()->route('profile.password.edit')->with('success', __('global.update_profile_success'));
     }
 
