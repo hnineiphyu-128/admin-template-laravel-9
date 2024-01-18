@@ -194,13 +194,6 @@
                 profileImageDocumentMap[file.name] = response.name
             },
             removedfile: function (file) {
-                $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
-                for (let i = 0; i < profileImageDropzone.files.length; i++) {
-                    const file = profileImageDropzone.files[i];
-                    if (i >= 1) {
-                        file.previewElement.classList.add('dz-error');
-                    }
-                }
                 swal({
                     title: "Are you sure you want to remove this image?",
                     text: "If you remove this, it will be delete from data.",
@@ -212,6 +205,17 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((willDelete) => {
                     if (willDelete) {
+                        var allPreviews = document.querySelectorAll(".dz-preview");
+                        allPreviews.forEach(function(previewElement) {
+                            previewElement.classList.remove("dz-error");
+                        });
+                        $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
+                        for (let i = 0; i < profileImageDropzone.files.length; i++) {
+                            const file = profileImageDropzone.files[i];
+                            if (i >= 1) {
+                                file.previewElement.classList.add('dz-error');
+                            }
+                        }
                         file.previewElement.remove()
                         var name = ''
                         if (typeof file.file_name !== 'undefined') {
@@ -253,10 +257,6 @@
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },
                 success: function (data) {
-                    var allPreviews = document.querySelectorAll(".dz-preview");
-                    allPreviews.forEach(function(previewElement) {
-                        previewElement.classList.remove("dz-error");
-                    });
                 },
                 error: function (data) {
                     console.log(data);

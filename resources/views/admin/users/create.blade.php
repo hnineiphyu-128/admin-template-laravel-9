@@ -174,17 +174,6 @@
                 profileImageDocumentMap[file.name] = response.name
             },
             removedfile: function (file) {
-                var allPreviews = document.querySelectorAll(".dz-preview");
-                allPreviews.forEach(function(previewElement) {
-                    previewElement.classList.remove("dz-error");
-                });
-                $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
-                for (let i = 0; i < profileImageDropzone.files.length; i++) {
-                    const file = profileImageDropzone.files[i];
-                    if (i >= 1) {
-                        file.previewElement.classList.add('dz-error');
-                    }
-                }
                 swal({
                     title: "Are you sure you want to remove this image?",
                     text: "If you remove this, it will be delete from data.",
@@ -196,6 +185,17 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((willDelete) => {
                     if (willDelete) {
+                        var allPreviews = document.querySelectorAll(".dz-preview");
+                        allPreviews.forEach(function(previewElement) {
+                            previewElement.classList.remove("dz-error");
+                        });
+                        $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
+                        for (let i = 0; i < profileImageDropzone.files.length; i++) {
+                            const file = profileImageDropzone.files[i];
+                            if (i >= 1) {
+                                file.previewElement.classList.add('dz-error');
+                            }
+                        }
                         file.previewElement.remove()
                         var name = ''
                         if (typeof file.file_name !== 'undefined') {
@@ -211,26 +211,5 @@
             }
 
         });
-
-        function removeMedia(file_name, type) {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('admin.users.removeMedia') }}',
-                data: {
-                    'file_name': file_name,
-                    'type': type,
-                    'model_id': {!! auth()->user()->id !!}
-                },
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    console.log(data);
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
     </script>
 @endsection
