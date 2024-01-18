@@ -197,7 +197,7 @@
                 $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
                 for (let i = 0; i < profileImageDropzone.files.length; i++) {
                     const file = profileImageDropzone.files[i];
-                    if (i >= 5) {
+                    if (i >= 1) {
                         file.previewElement.classList.add('dz-error');
                     }
                 }
@@ -247,8 +247,8 @@
         function removeMedia(file_name, type) {
             $.ajax({
                 type: 'POST',
-                url: '{{ route('admin.products.removeMedia') }}',
-                data: {'file_name' : file_name, 'type' : type, 'product_id': {!! $product->id !!} },
+                url: '{{ route('admin.users.removeMedia') }}',
+                data: {'file_name' : file_name, 'type' : type, 'model_id': {!! $user->id !!} },
                 headers: {
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },

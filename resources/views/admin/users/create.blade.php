@@ -155,19 +155,36 @@
         })
         // profile image image
         profileImageDocumentMap = [];
-        var featureImageDropzone = new Dropzone("#profileImageDropzone", {
+        var profileImageDropzone = new Dropzone("#profileImageDropzone", {
             url: '{{ route('admin.users.storeMedia') }}',
             maxFilesize: 2, // MB
             addRemoveLinks: true,
-            maxFiles: 1,
             headers: {
             'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
             success: function (file, response) {
+                $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
+                for (let i = 0; i < profileImageDropzone.files.length; i++) {
+                    const file = profileImageDropzone.files[i];
+                    if (i >= 1) {
+                        file.previewElement.classList.add('dz-error');
+                    }
+                }
                 $('form').append('<input type="hidden" name="profile_image" value="' + response.name + '">')
                 profileImageDocumentMap[file.name] = response.name
             },
             removedfile: function (file) {
+                var allPreviews = document.querySelectorAll(".dz-preview");
+                allPreviews.forEach(function(previewElement) {
+                    previewElement.classList.remove("dz-error");
+                });
+                $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
+                for (let i = 0; i < profileImageDropzone.files.length; i++) {
+                    const file = profileImageDropzone.files[i];
+                    if (i >= 1) {
+                        file.previewElement.classList.add('dz-error');
+                    }
+                }
                 swal({
                     title: "Are you sure you want to remove this image?",
                     text: "If you remove this, it will be delete from data.",

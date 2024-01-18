@@ -245,10 +245,6 @@
             profileImageDocumentMap[file.name] = response.name
         },
         removedfile: function (file) {
-            var allPreviews = document.querySelectorAll(".dz-preview");
-            allPreviews.forEach(function(previewElement) {
-                previewElement.classList.remove("dz-error");
-            });
             $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
             for (let i = 0; i < profileImageDropzone.files.length; i++) {
                 const file = profileImageDropzone.files[i];
@@ -303,7 +299,10 @@
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
             success: function (data) {
-                console.log(data);
+                var allPreviews = document.querySelectorAll(".dz-preview");
+                allPreviews.forEach(function(previewElement) {
+                    previewElement.classList.remove("dz-error");
+                });
             },
             error: function (data) {
                 console.log(data);
