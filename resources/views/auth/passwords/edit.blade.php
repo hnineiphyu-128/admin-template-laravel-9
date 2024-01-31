@@ -1,18 +1,21 @@
 @extends('layouts.admin')
 @section('styles')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.css">
 
-<style>
-    .dz-image img{
-        width: 120px !important;
-        height: 120px !important;
-    }
-    /* sweet alert */
-    .swal-button--confirm,
-    .swal-button--confirm:hover{
-        background-color: #FF0000 !important;
-    }
-</style>
+    {{-- dropzone custom style --}}
+    <style>
+        .dz-image img{
+            width: 120px !important;
+            height: 120px !important;
+        }
+    </style>
+    {{-- sweet alert custom style --}}
+    <style>
+        .swal-button--confirm,
+        .swal-button--confirm:hover{
+            background-color: #FF0000 !important;
+        }
+    </style>
 @endsection
 @section('content')
     @include('admin.common.success-message')
@@ -256,17 +259,6 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((willDelete) => {
                 if (willDelete) {
-                    var allPreviews = document.querySelectorAll(".dz-preview");
-                    allPreviews.forEach(function(previewElement) {
-                        previewElement.classList.remove("dz-error");
-                    });
-                    $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
-                    for (let i = 0; i < profileImageDropzone.files.length; i++) {
-                        const file = profileImageDropzone.files[i];
-                        if (i >= 1) {
-                            file.previewElement.classList.add('dz-error');
-                        }
-                    }
                     file.previewElement.remove()
                     var name = ''
                     if (typeof file.file_name !== 'undefined') {
@@ -274,8 +266,9 @@
                     } else {
                         name = profileImageDocumentMap[file.name]
                     }
-                    $('form').find('input[name="profile_image"][value="' + name + '"]').remove()
-                    removeMedia(file.name, 'profile_image')
+                    $('form').find('input[name="profile_image"][value="' + name + '"]').remove();
+                    removeErrorText('profileImageDropzone', 1);
+                    removeMedia(file.name, 'profile_image');
                 }
             });
         },
@@ -283,6 +276,7 @@
         }
 
     });
+
     // Loop through imagePaths and add images to Dropzone
     var imagePath = {!! json_encode(\App\Helpers\common::getImageSrc(auth()->user()->profile_image)) !!};
     if (imagePath) {
@@ -305,7 +299,15 @@
             success: function (data) {
             },
             error: function (data) {
-                console.log(data);
+            }
+        });
+    }
+
+    function removeErrorText(dropzoneIdName, max) {
+        var allPreviews = $(`#${dropzoneIdName}`).find('.dz-preview');
+        allPreviews.each(function(i, v) {
+            if (i < max) {
+                $(v).removeClass("dz-error");
             }
         });
     }

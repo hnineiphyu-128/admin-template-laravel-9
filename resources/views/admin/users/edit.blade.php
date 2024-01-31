@@ -2,15 +2,17 @@
 @section('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.css">
 
+    {{-- dropzone custom style --}}
     <style>
         .dz-image img {
             width: 120px !important;
             height: 120px !important;
         }
-
-        /* sweet alert */
+    </style>
+    {{-- sweet alert custom style --}}
+    <style>
         .swal-button--confirm,
-        .swal-button--confirm:hover {
+        .swal-button--confirm:hover{
             background-color: #FF0000 !important;
         }
     </style>
@@ -166,12 +168,14 @@
         })
 
         // readonly cus admin user must has Admin role
-        var user_id = {!! $user->id !!};
+       @isset($user)
+       var user_id = {!! $user->id !!};
         if (user_id == 1 || user_id == 2) {
             $(`.roles-${user_id}`).on('click', function(e) {
                 e.preventDefault(); // Prevent the default click behavior
             });
         }
+       @endisset
 
         // profile image
         profileImageDocumentMap = [];
@@ -205,17 +209,6 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((willDelete) => {
                     if (willDelete) {
-                        var allPreviews = document.querySelectorAll(".dz-preview");
-                        allPreviews.forEach(function(previewElement) {
-                            previewElement.classList.remove("dz-error");
-                        });
-                        $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
-                        for (let i = 0; i < profileImageDropzone.files.length; i++) {
-                            const file = profileImageDropzone.files[i];
-                            if (i >= 1) {
-                                file.previewElement.classList.add('dz-error');
-                            }
-                        }
                         file.previewElement.remove()
                         var name = ''
                         if (typeof file.file_name !== 'undefined') {
@@ -223,8 +216,9 @@
                         } else {
                             name = profileImageDocumentMap[file.name]
                         }
-                        $('form').find('input[name="profile_image"][value="' + name + '"]').remove()
-                        removeMedia(file.name, 'profile_image')
+                        $('form').find('input[name="profile_image"][value="' + name + '"]').remove();
+                        removeErrorText('profileImageDropzone', 1);
+                        removeMedia(file.name, 'profile_image');
                     }
                 });
             },
@@ -232,6 +226,7 @@
             }
 
         });
+
         // Loop through imagePaths and add images to Dropzone
         var imagePath = {!! json_encode(\App\Helpers\common::getImageSrc($user->profile_image)) !!};
         if (imagePath) {
@@ -247,7 +242,6 @@
             profileImageDropzone.files.push(mockFile);
         }
 
-
         function removeMedia(file_name, type) {
             $.ajax({
                 type: 'POST',
@@ -259,7 +253,15 @@
                 success: function (data) {
                 },
                 error: function (data) {
-                    console.log(data);
+                }
+            });
+        }
+
+        function removeErrorText(dropzoneIdName, max) {
+            var allPreviews = $(`#${dropzoneIdName}`).find('.dz-preview');
+            allPreviews.each(function(i, v) {
+                if (i < max) {
+                    $(v).removeClass("dz-error");
                 }
             });
         }

@@ -2,10 +2,10 @@
 @section('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.css">
 
+    {{-- sweet alert custom style --}}
     <style>
-        /* sweet alert */
         .swal-button--confirm,
-        .swal-button--confirm:hover {
+        .swal-button--confirm:hover{
             background-color: #FF0000 !important;
         }
     </style>
@@ -153,6 +153,7 @@
                 $('.password-error').html('');
             }
         })
+
         // profile image image
         profileImageDocumentMap = [];
         var profileImageDropzone = new Dropzone("#profileImageDropzone", {
@@ -185,17 +186,6 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((willDelete) => {
                     if (willDelete) {
-                        var allPreviews = document.querySelectorAll(".dz-preview");
-                        allPreviews.forEach(function(previewElement) {
-                            previewElement.classList.remove("dz-error");
-                        });
-                        $(file.previewElement).find('.dz-error-message').text('You cannot upload any more files');
-                        for (let i = 0; i < profileImageDropzone.files.length; i++) {
-                            const file = profileImageDropzone.files[i];
-                            if (i >= 1) {
-                                file.previewElement.classList.add('dz-error');
-                            }
-                        }
                         file.previewElement.remove()
                         var name = ''
                         if (typeof file.file_name !== 'undefined') {
@@ -203,7 +193,8 @@
                         } else {
                             name = profileImageDocumentMap[file.name]
                         }
-                        $('form').find('input[name="profile_image"][value="' + name + '"]').remove()
+                        $('form').find('input[name="profile_image"][value="' + name + '"]').remove();
+                        removeErrorText('profileImageDropzone', 1);
                     }
                 });
             },
@@ -211,5 +202,14 @@
             }
 
         });
+
+        function removeErrorText(dropzoneIdName, max) {
+            var allPreviews = $(`#${dropzoneIdName}`).find('.dz-preview');
+            allPreviews.each(function(i, v) {
+                if (i < max) {
+                    $(v).removeClass("dz-error");
+                }
+            });
+        }
     </script>
 @endsection
