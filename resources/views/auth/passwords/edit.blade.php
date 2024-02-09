@@ -244,7 +244,7 @@
                     file.previewElement.classList.add('dz-error');
                 }
             }
-            $('form').append('<input type="hidden" name="profile_image" value="' + response.name + '">')
+            $('form').append('<input type="hidden" name="profile_image[]" value="' + response.name + '">')
             profileImageDocumentMap[file.name] = response.name
         },
         removedfile: function (file) {
@@ -266,7 +266,7 @@
                     } else {
                         name = profileImageDocumentMap[file.name]
                     }
-                    $('form').find('input[name="profile_image"][value="' + name + '"]').remove();
+                    $('form').find('input[name="profile_image[]"][value="' + name + '"]').remove();
                     removeErrorText('profileImageDropzone', 1);
                     removeMedia(file.name, 'profile_image');
                 }

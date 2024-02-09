@@ -109,6 +109,11 @@
                     <div class="col-12 mt-3">
                         <div class="form-group mx-2mt-3">
                             <label class="mb-3">{{ trans('cruds.user.fields.roles') }}</label>
+                            @if ($errors->has('roles'))
+                                <small class="text-danger">
+                                    ({{ $errors->first('roles') }})
+                                </small>
+                            @endif
                             <div class="row">
                                 @foreach ($roles as $role)
                                     <div class="col-md-4 col-6 mb-2">
@@ -171,7 +176,7 @@
                         file.previewElement.classList.add('dz-error');
                     }
                 }
-                $('form').append('<input type="hidden" name="profile_image" value="' + response.name + '">')
+                $('form').append('<input type="hidden" name="profile_image[]" value="' + response.name + '">')
                 profileImageDocumentMap[file.name] = response.name
             },
             removedfile: function (file) {
@@ -193,7 +198,7 @@
                         } else {
                             name = profileImageDocumentMap[file.name]
                         }
-                        $('form').find('input[name="profile_image"][value="' + name + '"]').remove();
+                        $('form').find('input[name="profile_image[]"][value="' + name + '"]').remove();
                         removeErrorText('profileImageDropzone', 1);
                     }
                 });

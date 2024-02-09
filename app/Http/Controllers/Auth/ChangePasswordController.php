@@ -52,9 +52,9 @@ class ChangePasswordController extends Controller
         $user = auth()->user();
         try {
             DB::beginTransaction();
-            if(!empty($request['profile_image']) && is_null($user->profile_image))
+            if(!empty($request['profile_image'][0]) && is_null($user->profile_image))
             {
-                $imagePath = User::moveImage($request['profile_image'], User::IMAGE_PATH, 'profile_image', 'users');
+                $imagePath = User::moveImage($request['profile_image'][0], User::IMAGE_PATH, 'profile_image', 'users');
                 $user->profile_image = $imagePath;
                 $user->save();
             }

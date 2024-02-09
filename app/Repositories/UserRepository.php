@@ -31,10 +31,14 @@ class UserRepository implements UserRepositoryInterface
         try {
             DB::beginTransaction();
             /** @var User $user */
+            if(!empty($data['profile_image'])) {
+                $profile_image = $data['profile_image'][0];
+                unset($data['profile_image']);
+            }
             $user = User::create($data);
-            if(!empty($data['profile_image']))
+            if(!empty($profile_image))
             {
-                $imagePath = User::moveImage($data['profile_image'], User::IMAGE_PATH, 'profile_image', 'users');
+                $imagePath = User::moveImage($profile_image, User::IMAGE_PATH, 'profile_image', 'users');
                 $user->profile_image = $imagePath;
                 $user->save();
             } else {
@@ -55,9 +59,8 @@ class UserRepository implements UserRepositoryInterface
     {
         try {
             DB::beginTransaction();
-
             if(!empty($data['profile_image'])) {
-                $profile_image = $data['profile_image'];
+                $profile_image = $data['profile_image'][0];
                 unset($data['profile_image']);
             }
             $user->update($data);
