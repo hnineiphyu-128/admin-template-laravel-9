@@ -61,6 +61,11 @@
     <script src="{{ asset('template//assets/vendor/js/template-customizer.js') }}"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('template/html/assets/js/config.js') }}"></script>
+    <style>
+      #template-customizer { 
+        visibility: hidden !important;
+      }
+    </style>
   </head>
 
   <body>
